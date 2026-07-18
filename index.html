@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RESPOOL // Engineered Additive Sustainability</title>
+    <!-- Tailwind CSS for high-fidelity responsive layouts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons for minimalist aerospace-grade tech aesthetics -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --respool-green: #10B981;
+            --lm-slate: #0F172A;
+            --lm-slate-light: #1E293B;
+            --lm-light-gray: #F8FAFC;
+        }
+        body {
+            background-color: #FFFFFF;
+            color: #0F172A;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            overflow-x: hidden;
+        }
+        /* premium animations */
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 0.4; }
+            100% { transform: scale(1.2); opacity: 0; }
+        }
+        .animate-pulse-ring {
+            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        .active-nav-indicator {
+            border-bottom: 3px solid var(--respool-green);
+            color: #0F172A !important;
+        }
+        /* Style adjustments for range sliders */
+        input[type="range"]::-webkit-slider-thumb {
+            background: var(--respool-green);
+            border: 2px solid #FFFFFF;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen bg-white">
+
+    <!-- [GLOBAL TOAST CONTAINERS] -->
+    <div id="toast-container" class="fixed top-6 right-6 z-[100] flex flex-col gap-3 max-w-md w-full pointer-events-none"></div>
+
+    <!-- [1] Lockheed Martin Inspired Clean Header -->
+    <header class="border-b border-slate-200 bg-white sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 h-24 flex items-center justify-between">
+            
+            <!-- Brand Logo & Global Identity -->
+            <div class="flex items-center space-x-4 cursor-pointer" onclick="navigate('home')">
+                <div class="flex items-center space-x-2">
+                    <span class="text-2xl md:text-3xl font-black tracking-widest text-[#0F172A] flex items-center gap-2">
+                        <i data-lucide="recycle" class="text-[#10B981] w-8 h-8 animate-spin" style="animation-duration: 25s;"></i>
+                        RESPOOL
+                    </span>
+                </div>
+            </div>
+
+            <!-- Corporate Main Navigation Menu -->
+            <nav class="hidden lg:flex space-x-8 text-xs font-bold uppercase tracking-widest text-slate-600">
+                <button id="nav-home" onclick="navigate('home')" class="py-2 active-nav-indicator hover:text-slate-900 transition-colors">Home</button>
+                <button id="nav-who-we-are" onclick="navigate('who-we-are')" class="py-2 hover:text-slate-900 transition-colors">Who We Are</button>
+                <button id="nav-what-we-do" onclick="navigate('what-we-do')" class="py-2 hover:text-slate-900 transition-colors">What We Do</button>
+                <button id="nav-leadership" onclick="navigate('leadership')" class="py-2 hover:text-slate-900 transition-colors">Leadership & Staff</button>
+                
+                <!-- Products Menu dropdown -->
+                <div class="relative group py-2">
+                    <button class="hover:text-slate-900 transition-colors flex items-center gap-1 uppercase font-bold text-slate-600">
+                        Products & Services <i data-lucide="chevron-down" class="w-3 h-3 text-slate-400"></i>
+                    </button>
+                    <div class="absolute top-8 left-0 w-64 bg-white border border-slate-200 shadow-xl hidden group-hover:block py-2 rounded-none z-50">
+                        <button onclick="navigate('prod-filament')" class="w-full text-left px-4 py-3 text-xs uppercase hover:bg-slate-50 hover:text-[#10B981] tracking-wider block font-bold text-slate-700">cPET Filament Procurement</button>
+                        <button onclick="navigate('prod-custom-print')" class="w-full text-left px-4 py-3 text-xs uppercase hover:bg-slate-50 hover:text-[#10B981] tracking-wider block font-bold text-slate-700">Custom 3D Print Uplink</button>
+                        <button onclick="navigate('prod-premade')" class="w-full text-left px-4 py-3 text-xs uppercase hover:bg-slate-50 hover:text-[#10B981] tracking-wider block font-bold text-slate-700">Pre-made Blueprint Shop</button>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="flex items-center space-x-4">
+                <button onclick="navigate('prod-filament')" class="bg-[#0F172A] hover:bg-[#10B981] text-white hover:text-white px-5 py-3 text-xs font-bold uppercase tracking-widest transition-all">
+                    Get Filament
+                </button>
+                <!-- Mobile menu button -->
+                <button class="lg:hidden p-2 text-slate-800" onclick="toggleMobileMenu()">
+                    <i data-lucide="menu" id="menu-icon" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer menu -->
+        <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-200 bg-white px-6 py-4 space-y-4">
+            <button onclick="navigate('home'); toggleMobileMenu()" class="block w-full text-left py-2 font-bold text-slate-700 uppercase tracking-widest text-xs">Home</button>
+            <button onclick="navigate('who-we-are'); toggleMobileMenu()" class="block w-full text-left py-2 font-bold text-slate-700 uppercase tracking-widest text-xs">Who We Are</button>
+            <button onclick="navigate('leadership'); toggleMobileMenu()" class="block w-full text-left py-2 font-bold text-slate-700 uppercase tracking-widest text-xs">Leadership & Staff</button>
+            <button onclick="navigate('what-we-do'); toggleMobileMenu()" class="block w-full text-left py-2 font-bold text-slate-700 uppercase tracking-widest text-xs">What We Do</button>
+            <button onclick="navigate('prod-filament'); toggleMobileMenu()" class="block w-full text-left py-2 font-bold text-slate-700 uppercase tracking-widest text-xs text-[#10B981]">cPET Filament</button>
+            <button onclick="navigate('prod-custom-print'); toggleMobileMenu()" class="block w-full text-left py-2 font-bold text-slate-700 uppercase tracking-widest text-xs text-[#10B981]">Custom 3D Printing</button>
+            <button onclick="navigate('prod-premade'); toggleMobileMenu()" class="block w-full text-left py-2 font-bold text-slate-700 uppercase tracking-widest text-xs text-[#10B981]">Pre-made Shop</button>
+        </div>
+    </header>
+
+    <!-- ================= VIEW: HOME ================= -->
+    <main id="view-home" class="flex-grow">
+        <!-- [H1] Full-Bleed Corporate Media Header -->
+        <section class="relative h-[80vh] min-h-[600px] bg-slate-900 flex items-center overflow-hidden">
+        <!-- <section class="relative h-[80vh] min-h-[600px] bg-slate-900 flex items-center overflow-hidden"> -->
+            <!-- Background futuristic overlay if we want it again -->
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/90 to-slate-950/40 z-10"></div>
+            <!-- Embedded aesthetic looping Cambodian cityscape/aerospace background container -->
+          
+
+            <div class="relative z-20 max-w-7xl mx-auto px-6 w-full">
+                <div class="max-w-3xl">
+                    <span class="text-[#10B981] text-xs font-bold tracking-[0.3em] uppercase block mb-4">DEPLOYING 21ST CENTURY SECURITY MECHANISMS</span>
+                    <h1 class="text-4xl md:text-6xl font-black text-white tracking-tight leading-tight uppercase mb-6">
+                        Decentralized <br><span class="text-[#10B981]">Recycled Polymers</span> For Additive Production
+                    </h1>
+                    <p class="text-slate-300 text-lg mb-8 leading-relaxed">
+                        Transforming localized post-consumer plastic waste into structural-grade 3D printing spools. Closed-loop, secure, and mission-ready.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button onclick="navigate('prod-filament')" class="bg-[#10B981] hover:bg-white text-slate-950 font-bold uppercase tracking-wider text-xs px-8 py-4 transition-all text-center">
+                            Order Filament Products
+                        </button>
+                        <button onclick="navigate('what-we-do')" class="border border-white/30 hover:border-white text-white font-bold uppercase tracking-wider text-xs px-8 py-4 transition-all text-center">
+                            Our Mission Statement
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- [H2] Hardware Display Section (Respool Extruder Central Showcase) -->
+        <section class="py-24 bg-white border-b border-slate-200">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    <div class="lg:col-span-5 space-y-6">
+                        <span class="text-xs text-[#10B981] font-extrabold uppercase tracking-widest block font-mono"> HARDWARE SCHEMATIC LAYER</span>
+                        <h2 class="text-3xl md:text-4xl font-black text-slate-900 leading-tight uppercase">THE EXTRUDER CHAMBER</h2>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Respool's specialized extrusion hardware uses a precise multi-zone thermal matrix to convert shredded high-density polymers into highly purified printing threads. 
+                        </p>
+                        
+                        <div class="border-l-4 border-[#10B981] pl-4 py-2 font-mono text-xs text-slate-500 space-y-2">
+                            <div>DIAMETER_LOG: <span class="text-slate-800 font-bold">1.75mm (±0.02)</span></div>
+                            <div>OPERATIONAL_TEMP: <span class="text-slate-800 font-bold">230°C</span></div>
+                            <div>OUTPUT_STATE: <span class="text-[#10B981] font-bold">ACTIVE // NOMINAL</span></div>
+                        </div>
+                    </div>
+
+                    <!--machine -->
+                    <div class="lg:col-span-6 bg-slate-950  flex flex-col justify-center items-center aspect-video relative overflow-hidden group"> 
+    
+                        <!-- Subtle matrix grid background dots -->
+                         <div class="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:16px_16px] opacity-10"></div>
+                        
+                        <!-- Image asset targeted exactly into the SVG spatial layout footprint --> 
+                        <img src="/images/machine.jpg" 
+                            alt="Technical asset visual display" 
+                            class="absolute inset-0 w-full h-9/12 object-contain relative z-10 select-none pointer-events-none mix-blend-lighten" />
+
+                        <!-- Fixed bottom technical metadata stamp -->
+                        <div class="absolute bottom-4 left-4 font-mono text-[10px] text-slate-500"></div> 
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- [H2.5] Black Media Stream Workspace / Future Video Embed -->
+        <section class="py-20 bg-slate-950 border-b border-slate-800 text-center">
+    <div class="max-w-7xl mx-auto px-6">
+        <span class="text-xs text-[#10B981] font-mono tracking-[0.3em] uppercase block mb-4">LABORATORY MULTIMEDIA STREAM</span>
+        <h3 class="text-2xl font-black text-white uppercase tracking-tight mb-8">Decentralized Production Dynamics</h3>
+        
+        <!-- Main video container//// -->
+        <div class="pointer-events-none relative w-full aspect-video max-w-4xl mx-auto bg-black border border-slate-800 shadow-2xl group transition-all hover:border-[#10B981]/45 overflow-hidden bg-black">
+            <!-- 1. ACTUAL YOUTUBE VIDEO EMBED (Replace VIDEO_ID with your YouTube video ID) -->
+            <iframe 
+            
+            id="hiddenPlayer"
+            tabindex="-1"
+
+            class="absolute inset-0 w-full h-full" 
+            src="https://www.youtube.com/embed/iPNxT2wwccg?autoplay=1&mute=1&loop=1&playlist=iPNxT2wwccg&controls=1&rel=0" 
+            title="Laboratory Video Feed" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+        </iframe>
+
+            <div class="absolute bottom-4 right-4 font-mono text-[10px] text-slate-400 z-10"></div>
+        </div>
+    </div>
+</section>
+
+        <!-- [H3] Lockheed-Style Capabilities Grid -->
+        <section class="py-24 bg-slate-50 border-b border-slate-200">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="text-center mb-16 max-w-3xl mx-auto">
+                    <span class="text-xs text-[#10B981] font-extrabold uppercase tracking-widest font-mono"> CORE OPERATIONS</span>
+                    <h2 class="text-3xl md:text-4xl font-black text-slate-900 mt-2 uppercase">ADDITIVE VALUE PIPELINE</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Core block 1 -->
+                    <div class="bg-white border border-slate-200 p-8 hover:border-[#10B981] transition-all flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="bg-slate-100 w-12 h-12 flex items-center justify-center rounded-none mb-6">
+                                <i data-lucide="compass" class="text-[#10B981] w-6 h-6"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-4 uppercase">cPET Production</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed">
+                                Our signature material line processed directly from discarded bottles inside regional zones. Refined to withstand industrial tensile operations.
+                            </p>
+                        </div>
+                        <button onclick="navigate('prod-filament')" class="text-xs text-[#10B981] font-bold uppercase tracking-wider hover:underline flex items-center gap-2 mt-8">
+                            Configure Compound <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+
+                    <!-- Core block 2 -->
+                    <div class="bg-white border border-slate-200 p-8 hover:border-[#10B981] transition-all flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="bg-slate-100 w-12 h-12 flex items-center justify-center rounded-none mb-6">
+                                <i data-lucide="cloud-lightning" class="text-[#10B981] w-6 h-6"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-4 uppercase">Custom 3D Fabrication</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed">
+                                Rapid physical prototyping network using 100% recycled structural spools. Upload schematics directly to our localized production queue.
+                            </p>
+                        </div>
+                        <button onclick="navigate('prod-custom-print')" class="text-xs text-[#10B981] font-bold uppercase tracking-wider hover:underline flex items-center gap-2 mt-8">
+                            Upload CAD Blueprints <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+
+                    <!-- Core block 3 -->
+                    <div class="bg-white border border-slate-200 p-8 hover:border-[#10B981] transition-all flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="bg-slate-100 w-12 h-12 flex items-center justify-center rounded-none mb-6">
+                                <i data-lucide="database" class="text-[#10B981] w-6 h-6"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-4 uppercase">Approved Components</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed">
+                                Ready-made blueprints designed directly for recycled material strengths, from tactical protectors to everyday carabiner configurations.
+                            </p>
+                        </div>
+                        <button onclick="navigate('prod-premade')" class="text-xs text-[#10B981] font-bold uppercase tracking-wider hover:underline flex items-center gap-2 mt-8">
+                            Deploy Component Prints <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ================= VIEW: WHO WE ARE (About Us Hub) ================= -->
+    <main id="view-who-we-are" class="flex-grow py-24 bg-white hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                
+                <div class="lg:col-span-7 space-y-8">
+                    <div>
+                        <span class="text-xs text-[#10B981] font-extrabold uppercase tracking-widest font-mono"> Our NETWORK</span>
+                        <h2 class="text-4xl font-black text-slate-900 mt-2 uppercase">WHO WE ARE</h2>
+                    </div>
+
+                    <p class="text-slate-600 text-base leading-relaxed">
+                        We are engineers, developers, and regional makers working together within regional centers to transform manufacturing systems. We establish hardware nodes directly in waste processing zones to eliminate supply dependency and bring localized precision manufacturing to Cambodia.
+                    </p>
+
+                    <div class="border border-slate-200 bg-slate-50 p-6">
+                        <h3 class="text-sm font-extrabold uppercase tracking-widest text-slate-800 mb-4 font-mono">COMMUNICATIONS NETWORK</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <a href="https://linkedin.com" target="_blank" class="flex items-center gap-3 p-4 bg-white border border-slate-200 hover:border-[#10B981] transition-all text-xs font-bold text-slate-800 uppercase tracking-wider shadow-sm">
+                                <i data-lucide="linkedin" class="text-blue-600"></i> LinkedIn Profile
+                            </a>
+                            <a href="https://instagram.com" target="_blank" class="flex items-center gap-3 p-4 bg-white border border-slate-200 hover:border-[#10B981] transition-all text-xs font-bold text-slate-800 uppercase tracking-wider shadow-sm">
+                                <i data-lucide="instagram" class="text-pink-600"></i> Instagram Channel
+                            </a>
+                            <a href="https://telegram.org" target="_blank" class="flex items-center gap-3 p-4 bg-white border border-slate-200 hover:border-[#10B981] transition-all text-xs font-bold text-slate-800 uppercase tracking-wider shadow-sm">
+                                <i data-lucide="send" class="text-cyan-500"></i> Telegram Dispatch
+                            </a>
+                            <a href="https://youtube.com" target="_blank" class="flex items-center gap-3 p-4 bg-white border border-slate-200 hover:border-[#10B981] transition-all text-xs font-bold text-slate-800 uppercase tracking-wider shadow-sm">
+                                <i data-lucide="youtube" class="text-red-600"></i> YouTube Broadcast
+                            </a>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-slate-200 flex items-center gap-3 text-xs font-mono text-slate-500">
+                            <i data-lucide="mail"></i> Secure Email: <span class="text-slate-800 font-bold">respool@.gov.kh</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Strategic lab architecture layout space with full interactive SVG Blueprint mapping -->
+                <div class="lg:col-span-5 bg-slate-950 border border-slate-800 p-8 flex flex-col justify-center items-center aspect-[4/5] relative overflow-hidden">
+                    <div class="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:20px_20px] opacity-10"></div>
+                    
+                    <svg class="w-11/12 h-11/12 text-slate-800 relative z-10" viewBox="0 0 300 375" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Lab floor boundaries -->
+                        <rect x="10" y="10" width="280" height="355" stroke="#10b981" stroke-width="2" />
+                        
+                        <!-- Extrusion Zone Room -->
+                        <rect x="10" y="10" width="140" height="150" stroke="#10b981" stroke-width="1.5" stroke-dasharray="4 2" />
+                        <text x="20" y="30" fill="#10b981" font-size="8" font-family="monospace">EXTRUSION_CHAMBER_Z1</text>
+                        <circle cx="80" cy="85" r="15" stroke="#10b981" stroke-width="1" />
+                        <circle cx="80" cy="85" r="5" fill="#10b981" />
+
+                        <!-- CAD Fabrication suite -->
+                        <rect x="150" y="10" width="140" height="150" stroke="#10b981" stroke-width="1.5" stroke-dasharray="4 2" />
+                        <text x="160" y="30" fill="#10b981" font-size="8" font-family="monospace">CAD_FABRICATION_SUITE</text>
+                        <rect x="180" y="70" width="80" height="50" stroke="#10b981" stroke-width="1" />
+                        <line x1="180" y1="95" x2="260" y2="95" stroke="#10b981" stroke-width="1" />
+
+                        <!-- Logistics Warehousing Room -->
+                        <rect x="10" y="160" width="280" height="150" stroke="#10b981" stroke-width="1.5" stroke-dasharray="4 2" />
+                        <text x="20" y="180" fill="#10b981" font-size="8" font-family="monospace">RAW_FEEDSTOCK_INVENTORY</text>
+                        <rect x="40" y="210" width="60" height="30" stroke="#10b981" stroke-width="1" />
+                        <rect x="120" y="210" width="60" height="30" stroke="#10b981" stroke-width="1" />
+                        <rect x="200" y="210" width="60" height="30" stroke="#10b981" stroke-width="1" />
+
+                        <!-- Entrance -->
+                        <path d="M 110 365 H 190" stroke="#0f172a" stroke-width="6" />
+                        <path d="M 110 365 L 140 340 M 190 365 L 160 340" stroke="#10b981" stroke-width="2" />
+                        
+                        <!-- Compass symbol -->
+                        <circle cx="250" cy="330" r="15" stroke="#10b981" stroke-width="1" />
+                        <path d="M 250 310 L 250 350 M 230 330 L 270 330" stroke="#10b981" stroke-width="1" />
+                        <text x="247" y="305" fill="#10b981" font-size="8" font-family="monospace">N</text>
+                    </svg>
+
+                    <div class="absolute bottom-4 left-4 font-mono text-[10px] text-slate-500"></div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- ================= VIEW: LEADERSHIP & STAFF ================= -->
+    <main id="view-leadership" class="flex-grow py-24 bg-white hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="border-b border-slate-200 pb-6 mb-12">
+                <span class="text-xs text-[#10B981] font-extrabold uppercase tracking-widest font-mono">// GOVERNANCE CORE</span>
+                <h2 class="text-4xl font-black text-slate-900 mt-2 uppercase">LEADERSHIP & GOVERNANCE</h2>
+            </div>
+
+            <!-- Founders Registry Category -->
+            <div class="mb-16">
+                <h3 class="text-3xl text-black font-black uppercase tracking-[0.2em] mb-8 font-mono text-center "> FOUNDERS</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Founder Card 1 -->
+                    <div class="border border-slate-200 bg-slate-50 p-6 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="aspect-[3/4] bg-slate-900 border border-slate-800 flex items-center justify-center mb-6 relative overflow-hidden">
+                                <div class="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:12px_12px] opacity-15"></div>
+                                <img class="w-full h-full object-cover"
+                                 src="/images/yuth.png" 
+                                />
+                                <span class="absolute bottom-3 left-3 text-[9px] font-mono text-slate-500"></span>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-950 uppercase tracking-tight">SAM VIRAKYUTH</h3>
+                            <p class="text-xs font-mono text-[#10B981] font-bold mt-1">CHIEF EXECUTIVE OFFICER</p>
+                            <p class="text-slate-600 text-xs mt-4 leading-relaxed font-sans">
+                                Pioneered mechanical polymer recovery projects inside special economic zones. Former manufacturing consultant with advanced degrees in Additive Materials.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Founder Card 2 -->
+                    <div class="border border-slate-200 bg-slate-50 p-6 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="aspect-[3/4] bg-slate-900 border border-slate-800 flex items-center justify-center mb-6 relative overflow-hidden">
+                                <div class="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:12px_12px] opacity-15"></div>
+                                <svg class="w-24 h-24 text-[#10B981]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                </svg>
+                                <span class="absolute bottom-3 left-3 text-[9px] font-mono text-slate-500"></span>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-950 uppercase tracking-tight">KHAY LYHOUT</h3>
+                            <p class="text-xs font-mono text-[#10B981] font-bold mt-1">CHIEF TECHNOLOGY OFFICER</p>
+                            <p class="text-slate-600 text-xs mt-4 leading-relaxed font-sans">
+                                Expert in extrusion tooling architectures. Directs raw feedstock filtering process systems and structural testing suites.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Founder Card 3 -->
+                    <div class="border border-slate-200 bg-slate-50 p-6 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="aspect-[3/4] bg-slate-900 border border-slate-800 flex items-center justify-center mb-6 relative overflow-hidden">
+                                <div class="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:12px_12px] opacity-15"></div>
+                                <svg class="w-24 h-24 text-[#10B981]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                </svg>
+                                <span class="absolute bottom-3 left-3 text-[9px] font-mono text-slate-500"></span>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-950 uppercase tracking-tight">HOK LYANTHONY</h3>
+                            <p class="text-xs font-mono text-[#10B981] font-bold mt-1">CHIEF MARKETING OFFICER</p>
+                            <p class="text-slate-600 text-xs mt-4 leading-relaxed font-sans">
+                                Manages direct polymer interception pipelines with regional recovery cooperatives. Guarantees raw feedstock purity levels.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Staff Registry Category (With 3 Blank Skeleton Profiles) -->
+            <div>
+                <h3 class="text-2xl text-black font-black uppercase tracking-[0.2em] mb-8 font-mono text-center "> PRODUCTION & OPERATIONAL STAFF</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Staff member 1 -->
+                    <div class="border border-dashed border-slate-300 bg-white p-6 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="aspect-[3/4] bg-slate-100 border border-slate-200 flex items-center justify-center mb-6 relative overflow-hidden">
+                                <!-- Minimalist grid system to show placeholder -->
+                                <div class="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:16px_16px] opacity-40"></div>
+                                <i data-lucide="user" class="w-12 h-12 text-slate-300"></i>
+                                <span class="absolute bottom-3 left-3 text-[9px] font-mono text-slate-400"></span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-400 uppercase tracking-tight">LEAM PUTHYPONG</h3>
+                            <p class="text-xs font-mono text-slate-400 mt-1">LOGISTICS</p>
+                            <p class="text-slate-400 text-xs mt-4 leading-relaxed italic font-mono">
+                                Managed the logistics for filaments
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Staff member 2 -->
+                    <div class="border border-dashed border-slate-300 bg-white p-6 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="aspect-[3/4] bg-slate-100 border border-slate-200 flex items-center justify-center mb-6 relative overflow-hidden">
+                                <i data-lucide="user" class="w-12 h-12 text-slate-300"></i>
+                                <span class="absolute bottom-3 left-3 text-[9px] font-mono text-slate-400"></span>
+                                <img class="w-full h-full object-cover"
+                                 src="/images/vichit.jpg" 
+                                />
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-400 uppercase tracking-tight">HENG ARUNVIHIT</h3>
+                            <p class="text-xs font-mono text-slate-400 mt-1">MASCOT</p>
+                            <p class="text-slate-400 text-xs mt-4 leading-relaxed italic font-mono">
+                                The Face of the Company
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Staff member 3 -->
+                    <div class="border border-dashed border-slate-300 bg-white p-6 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="aspect-[3/4] bg-slate-100 border border-slate-200 flex items-center justify-center mb-6 relative overflow-hidden">
+                                <i data-lucide="user" class="w-12 h-12 text-slate-300"></i>
+                                <span class="absolute bottom-3 left-3 text-[9px] font-mono text-slate-400"></span>
+                                <img class="w-full h-full object-cover"
+                                 src="/images/bundith.jpg" 
+                                />
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-400 uppercase tracking-tight">SUM PRITHYBUNDITH</h3>
+                            <p class="text-xs font-mono text-slate-400 mt-1">OPERATOR</p>
+                            <p class="text-slate-400 text-xs mt-4 leading-relaxed italic font-mono">
+                                Operate and manage
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ================= VIEW: WHAT WE DO ================= -->
+    <main id="view-what-we-do" class="flex-grow py-24 bg-white hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            
+            <div class="border-b border-slate-200 pb-6 mb-12">
+                <span class="text-xs text-[#10B981] font-extrabold uppercase tracking-widest font-mono">RECONSTRUCTING PRODUCTION LINES</span>
+                <h2 class="text-4xl font-black text-slate-900 mt-2 uppercase">WHAT WE DO</h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start mb-16">
+                
+                <!-- Our Story Block -->
+                <div class="lg:col-span-6 space-y-6">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="history" class="text-[#10B981] w-8 h-8"></i>
+                        <h3 class="text-2xl font-black uppercase text-slate-900 tracking-tight">Our Story</h3>
+                    </div>
+                    <p class="text-slate-800 font-extrabold text-lg leading-relaxed italic border-l-4 border-[#10B981] pl-4">
+                        We started because filament was too expensive and plastic waste was too ignored.
+                    </p>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Respool was founded by a group of engineers and makers who were tired of paying high prices for imported filament, and watching recyclable plastic end up in landfills. We decided to fix both at once.
+                    </p>
+                </div>
+
+                <!-- Our Mission Block -->
+                <div class="lg:col-span-6 space-y-6">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="target" class="text-[#10B981] w-8 h-8"></i>
+                        <h3 class="text-2xl font-black uppercase text-slate-900 tracking-tight">Our Mission</h3>
+                    </div>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        To make 3D printing accessible to everyone — students, makers, professionals, and small businesses — by closing the loop on plastic waste and turning it into the raw material of creation. Every spool sold is plastic that did not go to a landfill.
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Operational Blueprint Row (Aesthetic Lockheed-style panel) -->
+            <div class="bg-slate-50 border border-slate-200 p-8 grid grid-cols-1 md:grid-cols-3 gap-6 font-mono text-xs">
+                <div class="space-y-2">
+                    <div class="text-slate-500 font-bold uppercase tracking-wider"> LOCALIZED ACQUISITION</div>
+                    <p class="text-slate-600">Intercepting waste vectors inside municipal boundaries, eliminating external shipping pollution.</p>
+                </div>
+                <div class="space-y-2">
+                    <div class="text-slate-500 font-bold uppercase tracking-wider"> FILTRATION SPECS</div>
+                    <p class="text-slate-600">Strict polymer purity scans ensure no hazardous gases are produced during final melting phases.</p>
+                </div>
+                <div class="space-y-2">
+                    <div class="text-slate-500 font-bold uppercase tracking-wider"> UNIVERSAL ACCESS</div>
+                    <p class="text-slate-600">Diverting material yields to high-density spool runs distributed locally at minimal cost margins.</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ================= VIEW: PRODUCT FILAMENT (cPET) ================= -->
+    <main id="view-prod-filament" class="flex-grow py-24 bg-white hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                
+                <!-- Procurement Configurator Panel -->
+                <div class="lg:col-span-7 space-y-8">
+                    <div>
+                        <span class="text-xs text-[#10B981] font-extrabold uppercase tracking-widest font-mono"> MATERIAL PROCUREMENT PORTAL</span>
+                        <h2 class="text-4xl font-black text-slate-900 mt-2 uppercase">cPET Filament</h2>
+                    </div>
+
+                    <p class="text-slate-600 text-sm leading-relaxed font-sans">
+                        Our premium recycled plastic formulation is optimized for structural toughness, chemical resistance, and ease of extrusion. Suitable for engineering prototypes, rugged casings, and general fabrication requirements.
+                    </p>
+
+                    <!-- Technical Spool Illustration -->
+                    <div class="border border-slate-200 bg-slate-50 p-6 flex flex-col md:flex-row gap-6 items-center">
+                        <div class="w-32 h-32 shrink-0 bg-[#0F172A] flex items-center justify-center border border-slate-800 relative rounded-none overflow-hidden">
+                            <div class="absolute inset-0 bg-[radial-gradient(#10b981_0.5px,transparent_0.5px)] [background-size:10px_10px] opacity-10"></div>
+                            
+                            <!-- High Fidelity Spool SVG -->
+                            <svg class="w-24 h-24 text-[#10B981] animate-spin" style="animation-duration: 40s" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Outer Spool Rim -->
+                                <circle cx="50" cy="50" r="45" stroke="#10b981" stroke-width="1.5" stroke-dasharray="4 2" />
+                                <circle cx="50" cy="50" r="42" stroke="#10b981" stroke-width="0.75" />
+                                
+                                <!-- Core Spool Cylinder -->
+                                <circle cx="50" cy="50" r="24" stroke="#10b981" stroke-width="2" />
+                                <circle cx="50" cy="50" r="12" stroke="#10b981" stroke-width="1.5" />
+                                
+                                <!-- Concentric rings representing wound filament threads -->
+                                <circle cx="50" cy="50" r="38" stroke="#10b981" stroke-width="1" stroke-opacity="0.6" />
+                                <circle cx="50" cy="50" r="35" stroke="#10b981" stroke-width="1" stroke-opacity="0.7" />
+                                <circle cx="50" cy="50" r="32" stroke="#10b981" stroke-width="1" stroke-opacity="0.8" />
+                                <circle cx="50" cy="50" r="29" stroke="#10b981" stroke-width="1" stroke-opacity="0.9" />
+                                
+                                <!-- Structural Alignment Holes -->
+                                <circle cx="50" cy="20" r="3" fill="#10b981" fill-opacity="0.5" />
+                                <circle cx="50" cy="80" r="3" fill="#10b981" fill-opacity="0.5" />
+                                <circle cx="20" cy="50" r="3" fill="#10b981" fill-opacity="0.5" />
+                                <circle cx="80" cy="50" r="3" fill="#10b981" fill-opacity="0.5" />
+                            </svg>
+                        </div>
+                        <div class="space-y-2">
+                            <h4 class="text-xs font-mono font-bold uppercase text-slate-800"> SPECIFICATIONS REPORT</h4>
+                            <ul class="text-[11px] font-mono text-slate-500 space-y-1">
+                                <li>MATERIAL: <span class="text-slate-800 font-bold">100% Recycled cPETG</span></li>
+                                <li>ROUNDNESS: <span class="text-slate-800 font-bold">≥ 97.2% Symmetric Tolerance</span></li>
+                                <li>STIFFNESS: <span class="text-slate-800 font-bold">High Elastic Tensile Limit</span></li>
+                                <li>RECOMMENDED TEMP: <span class="text-slate-800 font-bold">220°C - 245°C</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Configurator Form -->
+                    <div class="space-y-6">
+                        <!-- Color Selector -->
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 font-mono">Select Filament Color Profile</label>
+                            <div class="grid grid-cols-3 gap-3">
+                                <button onclick="selectColor('Tactical Olive', 18.50, this)" class="color-btn border-2 border-[#10B981] bg-[#10B981]/10 text-slate-900 p-4 text-xs font-bold tracking-wider uppercase text-center transition-all">
+                                    Tactical Olive
+                                </button>
+                                <button onclick="selectColor('Stealth Black', 19.00, this)" class="color-btn border border-slate-200 hover:border-[#10B981]/50 text-slate-400 p-4 text-xs font-bold tracking-wider uppercase text-center transition-all">
+                                    Stealth Black
+                                </button>
+                                <button onclick="selectColor('Angkor Red', 19.50, this)" class="color-btn border border-slate-200 hover:border-[#10B981]/50 text-slate-400 p-4 text-xs font-bold tracking-wider uppercase text-center transition-all">
+                                    Angkor Red
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Spool Size selector -->
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 font-mono">Select Spool Diameter Metric</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button onclick="selectSpoolSize('1.75mm', this)" class="spool-btn border-2 border-[#10B981] bg-[#10B981]/10 text-slate-900 p-4 text-xs font-bold tracking-wider uppercase text-center transition-all">
+                                    1.75mm (Standard)
+                                </button>
+                                <button onclick="selectSpoolSize('2.85mm', this)" class="spool-btn border border-slate-200 hover:border-[#10B981]/50 text-slate-400 p-4 text-xs font-bold tracking-wider uppercase text-center transition-all">
+                                    2.85mm (Specialty)
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Quantity Mass Slider -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="text-xs font-bold uppercase tracking-wider text-slate-500 font-mono">Mass Capacity Allocation</label>
+                                <span id="qty-val-page" class="text-[#10B981] font-mono font-bold text-lg">1 kg</span>
+                            </div>
+                            <input id="qty-slider-page" type="range" min="1" max="100" value="1" oninput="updateQuantityPage(this.value)" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#10B981]">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Cost Estimate Block -->
+                <div class="lg:col-span-5 bg-slate-50 border border-slate-200 p-8 flex flex-col justify-between aspect-[4/5] shadow-sm">
+                    <div>
+                        <div class="border-b border-slate-200 pb-4 mb-6">
+                            <span class="text-xs font-bold text-[#10B981] uppercase font-mono tracking-widest"></span>
+                            <h3 class="text-lg font-bold text-slate-900 mt-1 uppercase">ORDER</h3>
+                        </div>
+
+                        <div class="space-y-4 font-mono text-xs text-slate-600">
+                            <div class="flex justify-between">
+                                <span>MATERIAL GRADE:</span>
+                                <span class="font-bold text-slate-950 text-right">RECYCLED cPET</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>SIZE ALLOCATION:</span>
+                                <span id="summary-size" class="font-bold text-slate-950 text-right">1.75mm</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>UNIT RATE CAP:</span>
+                                <span id="summary-rate" class="font-bold text-slate-950 text-right">$18.50 / kg</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>MASS SECURED:</span>
+                                <span id="summary-weight" class="font-bold text-[#10B981] text-right">1.00 kg</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 pt-6 border-t border-slate-200 space-y-4">
+                        <div class="flex justify-between items-end">
+                            <span class="text-xs text-slate-500 uppercase font-mono">Grand Total Est:</span>
+                            <span id="total-cost-page" class="text-4xl font-black tracking-tight text-slate-900">$18.50 <span class="text-sm font-normal text-slate-400">USD</span></span>
+                        </div>
+                        <button onclick="triggerPayment()" class="w-full bg-[#0F172A] hover:bg-[#10B981] text-white py-4 text-xs font-bold uppercase tracking-widest transition-all shadow-md">
+                            Submit Purchase Contract
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- ================= VIEW: CUSTOM 3D PRINT UPLINK ================= -->
+    <main id="view-prod-custom-print" class="flex-grow py-24 bg-white hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                
+                <!-- Configuration panel -->
+                <div class="lg:col-span-7 space-y-8">
+                    <div>
+                        <span class="text-xs text-[#10B981] font-extrabold uppercase tracking-widest font-mono">COMPONENT PRODUCTION SYSTEM</span>
+                        <h2 class="text-4xl font-black text-slate-900 mt-2 uppercase">Custom Fabrication</h2>
+                    </div>
+
+                    <p class="text-slate-600 text-sm leading-relaxed font-sans">
+                        Respool provides localized additive manufacturing networks to rapidly build custom objects. Perfect for small businesses, engineering models, and durable tools.
+                    </p>
+
+                    <!-- Interactive Drag-And-Drop File Uplink Panel -->
+                    <div class="border-2 border-dashed border-slate-200 hover:border-[#10B981] transition-all bg-slate-50 p-12 text-center cursor-pointer relative shadow-sm" onclick="simulateFileUpload()">
+                        <input type="file" id="model-file-input-page" accept=".stl,.step,.3mf" class="hidden" onchange="handleFileSelectedPage(event)">
+                        <i data-lucide="file-symlink" class="w-12 h-12 text-slate-400 mx-auto mb-4"></i>
+                        <span class="block text-sm font-extrabold text-slate-800 uppercase tracking-widest">Transmit Blueprint Vector</span>
+                        <span class="block text-xs text-slate-500 mt-2">Uplink accepts: .STL, .STEP, and .3MF files</span>
+                    </div>
+
+                    <!-- Custom Filament Options -->
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 font-mono"> Select Production Filament Compound</label>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button onclick="selectPrintColor('Tactical Olive', this)" class="print-col-btn border-2 border-[#10B981] bg-[#10B981]/10 text-slate-900 p-4 text-xs font-bold tracking-wider uppercase text-center transition-all">
+                                Tactical Olive
+                            </button>
+                            <button onclick="selectPrintColor('Stealth Black', this)" class="print-col-btn border border-slate-200 hover:border-[#10B981]/50 text-slate-400 p-4 text-xs font-bold tracking-wider uppercase text-center transition-all">
+                                Stealth Black
+                            </button>
+                            <button onclick="selectPrintColor('Angkor Red', this)" class="print-col-btn border border-slate-200 hover:border-[#10B981]/50 text-slate-400 p-4 text-xs font-bold tracking-wider uppercase text-center transition-all">
+                                Angkor Red
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Telemetry 3D Viewport Block -->
+                <div class="lg:col-span-5 bg-slate-50 border border-slate-200 p-8 flex flex-col justify-between aspect-[4/5] shadow-sm">
+                    <div>
+                        <div class="border-b border-slate-200 pb-4 mb-6">
+                            <span class="text-xs font-bold text-[#10B981] uppercase font-mono tracking-widest">SECURE LIVE RENDER</span>
+                            <h3 class="text-lg font-bold text-slate-900 mt-1 uppercase">3D Coordinate Engine</h3>
+                        </div>
+
+                        <!-- 3D Viewer Space -->
+                        <div class="w-full bg-[#0F172A] p-4 border border-slate-800 mb-4 rounded-none relative group select-none">
+                            <div class="flex justify-between items-center mb-2 text-[10px] font-mono text-slate-400">
+                                <span>MODEL_STATE</span>
+                                <span id="file-status-page" class="text-slate-500 uppercase">Awaiting Transmission...</span>
+                            </div>
+                            <canvas id="viewport-canvas-page" class="w-full h-48 block bg-slate-950 cursor-grab active:cursor-grabbing border border-slate-800" width="350" height="192"></canvas>
+                            <div class="absolute bottom-6 right-6 bg-slate-900/80 border border-slate-700/80 px-2 py-1 text-[8px] font-mono text-slate-400 pointer-events-none select-none rounded-sm">
+                                CLICK & DRAG TO ORBIT
+                            </div>
+                        </div>
+
+                        <!-- Parsing simulation progress container -->
+                        <div id="parsing-container" class="hidden font-mono text-[10px] space-y-1.5 pb-4">
+                            <div class="flex justify-between text-slate-500">
+                                <span>COMPILING MESH VECTORS...</span>
+                                <span id="parsing-percentage">0%</span>
+                            </div>
+                            <div class="w-full bg-slate-200 h-1.5 overflow-hidden">
+                                <div id="parsing-bar" class="bg-[#10B981] h-full transition-all duration-300 w-0"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-6 border-t border-slate-200">
+                        <button onclick="triggerPrintSubmit()" class="w-full bg-[#0F172A] hover:bg-[#10B981] text-white py-4 text-xs font-bold uppercase tracking-widest transition-all shadow-md">
+                            Transmit Build Order
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- ================= VIEW: PRE-MADE CATALOG ================= -->
+    <main id="view-prod-premade" class="flex-grow py-24 bg-white hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            
+            <div class="border-b border-slate-200 pb-6 mb-12">
+                <span class="text-xs text-[#10B981] font-extrabold uppercase tracking-widest font-mono">SECURE COMPONENT LIBRARY</span>
+                <h2 class="text-4xl font-black text-slate-900 mt-2 uppercase">PRE-MADE COMPONENT SHOP</h2>
+            </div>
+
+            <!-- Premade Design Product Grid (Expanded to 6 objects with clear structural labels) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Product Card 1 -->
+                <div onclick="openCatalogDetail(1)" class="border border-slate-200 bg-slate-50 p-6 flex flex-col justify-between hover:border-[#10B981] transition-all cursor-pointer group shadow-sm">
+                    <div>
+                        <div class="aspect-square bg-slate-950 border border-slate-800 flex items-center justify-center mb-6 relative overflow-hidden group-hover:border-[#10B981]/50 transition-all">
+                            <div class="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:12px_12px] opacity-10"></div>
+                            <svg id="svg-card-1" class="w-32 h-32 text-[#10B981] relative z-10" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="30" y="15" width="40" height="70" rx="6" stroke="currentColor" stroke-width="1.5" />
+                                <rect x="34" y="19" width="32" height="62" rx="3" stroke="currentColor" stroke-width="1" stroke-dasharray="2 1" />
+                                <rect x="42" y="25" width="16" height="10" rx="1" stroke="currentColor" stroke-width="1" />
+                            </svg>
+                            <span class="absolute bottom-2 left-3 font-mono text-[8px] text-slate-500">REF: CASE_V2.STL</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-950 uppercase tracking-tight">Tactical Armor Phone Case</h3>
+                        <p class="text-xs font-mono text-[#10B981] font-bold mt-1">PRODUCT: ARMOR-CASE-V2</p>
+                        <p class="text-slate-600 text-xs mt-4 leading-relaxed">
+                            Ultra-rugged protective chassis customized with layered carbon-infused structural patterns. Extremely durable drop-protection.
+                        </p>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-slate-200 flex justify-between items-center text-xs">
+                        <span class="text-slate-500 font-mono">Price: $12.00 // Mass: ~45g</span>
+                        <button class="text-[#10B981] font-bold uppercase tracking-wider hover:underline flex items-center gap-1">Configure & Order <i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                    </div>
+                </div>
+
+                <!-- Product Card 2 -->
+                <div onclick="openCatalogDetail(2)" class="border border-slate-200 bg-slate-50 p-6 flex flex-col justify-between hover:border-[#10B981] transition-all cursor-pointer group shadow-sm">
+                    <div>
+                        <div class="aspect-square bg-slate-950 border border-slate-800 flex items-center justify-center mb-6 relative overflow-hidden group-hover:border-[#10B981]/50 transition-all">
+                            <div class="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:12px_12px] opacity-10"></div>
+                            <svg id="svg-card-2" class="w-32 h-32 text-[#10B981] relative z-10" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M 35 25 C 50 15, 65 15, 70 30 C 73 40, 70 60, 65 75 C 55 85, 40 85, 35 75 C 30 65, 30 35, 35 25 Z" stroke="currentColor" stroke-width="1.5" />
+                                <line x1="33" y1="35" x2="33" y2="65" stroke="currentColor" stroke-width="3" stroke-dasharray="4 2" />
+                            </svg>
+                            <span class="absolute bottom-2 left-3 font-mono text-[8px] text-slate-500">REF: CLIP_M3.STL</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-950 uppercase tracking-tight">Heavy Duty Locking Keychain</h3>
+                        <p class="text-xs font-mono text-[#10B981] font-bold mt-1">PRODUCT: CARABINER-CLIP</p>
+                        <p class="text-slate-600 text-xs mt-4 leading-relaxed font-sans">
+                            High-density modular carabiner clip system engineered specifically for heavy tension-bearing operations.
+                        </p>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-slate-200 flex justify-between items-center text-xs">
+                        <span class="text-slate-500 font-mono">Price: $6.50 // Mass: ~20g</span>
+                        <button class="text-[#10B981] font-bold uppercase tracking-wider hover:underline flex items-center gap-1">Configure & Order <i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                    </div>
+                </div>
+
+                <!-- Product Card 3 -->
+                <div onclick="openCatalogDetail(3)" class="border border-slate-200 bg-slate-50 p-6 flex flex-col justify-between hover:border-[#10B981] transition-all cursor-pointer group shadow-sm">
+                    <div>
+                        <div class="aspect-square bg-slate-950 border border-slate-800 flex items-center justify-center mb-6 relative overflow-hidden group-hover:border-[#10B981]/50 transition-all">
+                            <div class="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:12px_12px] opacity-10"></div>
+                            <svg id="svg-card-3" class="w-32 h-32 text-[#10B981] relative z-10" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="20" y="20" width="60" height="60" rx="3" stroke="currentColor" stroke-width="1.5" />
+                                <line x1="40" y1="20" x2="40" y2="80" stroke="currentColor" stroke-width="1" />
+                                <line x1="20" y1="40" x2="80" y2="40" stroke="currentColor" stroke-width="1" />
+                            </svg>
+                            <span class="absolute bottom-2 left-3 font-mono text-[8px] text-slate-500">REF: GRID_DIV.STL</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-950 uppercase tracking-tight">Modular Grid Divider System</h3>
+                        <p class="text-xs font-mono text-[#10B981] font-bold mt-1">PRODUCT: DESK-ORGANIZER</p>
+                        <p class="text-slate-600 text-xs mt-4 leading-relaxed font-sans">
+                            Interlocking desk or tray organizer units to streamline sorting files, electronics, and manual instruments.
+                        </p>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-slate-200 flex justify-between items-center text-xs">
+                        <span class="text-slate-500 font-mono">Price: $18.00 // Mass: ~120g</span>
+                        <button class="text-[#10B981] font-bold uppercase tracking-wider hover:underline flex items-center gap-1">Configure & Order <i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                    </div>
+                </div>
+
+                <!-- Product Card 4 -->
+                <div onclick="openCatalogDetail(4)" class="border border-slate-200 bg-slate-50 p-6 flex flex-col justify-between hover:border-[#10B981] transition-all cursor-pointer group shadow-sm">
+                    <div>
+                        <div class="aspect-square bg-slate-950 border border-slate-800 flex items-center justify-center mb-6 relative overflow-hidden group-hover:border-[#10B981]/50 transition-all">
+                            <div class="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:12px_12px] opacity-10"></div>
+                            <!-- Cable organizer silhouette -->
+                            <svg id="svg-card-4" class="w-32 h-32 text-[#10B981] relative z-10" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="15" y="40" width="70" height="20" rx="4" stroke="currentColor" stroke-width="1.5"/>
+                                <circle cx="30" cy="50" r="4" fill="currentColor"/>
+                                <circle cx="50" cy="50" r="4" fill="currentColor"/>
+                                <circle cx="70" cy="50" r="4" fill="currentColor"/>
+                            </svg>
+                            <span class="absolute bottom-2 left-3 font-mono text-[8px] text-slate-500">REF: CABLE_MGMT.STL</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-950 uppercase tracking-tight">Desk Cable Manager</h3>
+                        <p class="text-xs font-mono text-[#10B981] font-bold mt-1">PRODUCT: CABLE-WRAP-S1</p>
+                        <p class="text-slate-600 text-xs mt-4 leading-relaxed font-sans">
+                            Sleek three-slot flexible channel guide designed to retain heavy connection cords along horizontal desks.
+                        </p>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-slate-200 flex justify-between items-center text-xs">
+                        <span class="text-slate-500 font-mono">Price: $5.00 // Mass: ~15g</span>
+                        <button class="text-[#10B981] font-bold uppercase tracking-wider hover:underline flex items-center gap-1">Configure & Order <i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                    </div>
+                </div>
+
+                <!-- Product Card 5 -->
+                <div onclick="openCatalogDetail(5)" class="border border-slate-200 bg-slate-50 p-6 flex flex-col justify-between hover:border-[#10B981] transition-all cursor-pointer group shadow-sm">
+                    <div>
+                        <div class="aspect-square bg-slate-950 border border-slate-800 flex items-center justify-center mb-6 relative overflow-hidden group-hover:border-[#10B981]/50 transition-all">
+                            <div class="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:12px_12px] opacity-10"></div>
+                            <!-- Bracket system SVG -->
+                            <svg id="svg-card-5" class="w-32 h-32 text-[#10B981] relative z-10" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20 20 H80 V40 H40 V80 H20 Z" stroke="currentColor" stroke-width="1.5"/>
+                                <circle cx="30" cy="30" r="3" fill="currentColor"/>
+                                <circle cx="70" cy="30" r="3" fill="currentColor"/>
+                            </svg>
+                            <span class="absolute bottom-2 left-3 font-mono text-[8px] text-slate-500">REF: ANGLE_BRK.STL</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-950 uppercase tracking-tight">Industrial Corner Bracket</h3>
+                        <p class="text-xs font-mono text-[#10B981] font-bold mt-1">PRODUCT: BRACKET-HEAVY</p>
+                        <p class="text-slate-600 text-xs mt-4 leading-relaxed font-sans">
+                            Reinforced dual-plane layout brace optimized for localized structural assembly or heavy utility shelves.
+                        </p>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-slate-200 flex justify-between items-center text-xs">
+                        <span class="text-slate-500 font-mono">Price: $9.50 // Mass: ~80g</span>
+                        <button class="text-[#10B981] font-bold uppercase tracking-wider hover:underline flex items-center gap-1">Configure & Order <i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                    </div>
+                </div>
+
+                <!-- Product Card 6 -->
+                <div onclick="openCatalogDetail(6)" class="border border-slate-200 bg-slate-50 p-6 flex flex-col justify-between hover:border-[#10B981] transition-all cursor-pointer group shadow-sm">
+                    <div>
+                        <div class="aspect-square bg-slate-950 border border-slate-800 flex items-center justify-center mb-6 relative overflow-hidden group-hover:border-[#10B981]/50 transition-all">
+                            <div class="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:12px_12px] opacity-10"></div>
+                            <!-- Gears / Cog SVG -->
+                            <svg id="svg-card-6" class="w-32 h-32 text-[#10B981] relative z-10" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="50" cy="50" r="25" stroke="currentColor" stroke-width="2" />
+                                <circle cx="50" cy="50" r="10" stroke="currentColor" stroke-width="1.5" />
+                                <rect x="47" y="20" width="6" height="10" fill="currentColor" />
+                                <rect x="47" y="70" width="6" height="10" fill="currentColor" />
+                                <rect x="20" y="47" width="10" height="6" fill="currentColor" />
+                                <rect x="70" y="47" width="10" height="6" fill="currentColor" />
+                            </svg>
+                            <span class="absolute bottom-2 left-3 font-mono text-[8px] text-slate-500">REF: MECH_GEAR.STL</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-950 uppercase tracking-tight">Precision Transmission Gear</h3>
+                        <p class="text-xs font-mono text-[#10B981] font-bold mt-1">PRODUCT: COG-DRIVE-X1</p>
+                        <p class="text-slate-600 text-xs mt-4 leading-relaxed font-sans">
+                            High precision module-2 spur gear designed to integrate smoothly inside localized laboratory test systems.
+                        </p>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-slate-200 flex justify-between items-center text-xs">
+                        <span class="text-slate-500 font-mono">Price: $14.25 // Mass: ~35g</span>
+                        <button class="text-[#10B981] font-bold uppercase tracking-wider hover:underline flex items-center gap-1">Configure & Order <i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- ================= VIEW: PRE-MADE CATALOG DETAIL CUSTOMIZER ================= -->
+    <main id="view-prod-premade-detail" class="flex-grow py-24 bg-white hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <button onclick="navigate('prod-premade')" class="inline-flex items-center gap-2 text-slate-500 hover:text-slate-950 text-xs font-bold font-mono uppercase tracking-widest mb-8 transition-colors">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Back To Catalog Library
+            </button>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                
+                <!-- Graphic Preview & Description Block -->
+                <div class="lg:col-span-6 space-y-8">
+                    <div class="bg-slate-950 border border-slate-800 p-12 flex flex-col justify-center items-center aspect-square relative overflow-hidden shadow-sm">
+                        <div class="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:16px_16px] opacity-10"></div>
+                        <div class="absolute top-4 left-4 font-mono text-[9px] text-slate-500"></div>
+                        
+                        <!-- Dynamic Colorized SVG Preview Container -->
+                        <div id="detail-svg-viewport" class="w-48 h-48 flex items-center justify-center">
+                            <!-- Dynamic SVG injected via Javascript depending on catalog selection -->
+                        </div>
+
+                        <div class="absolute bottom-4 left-4 font-mono text-[9px] text-slate-500 flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 bg-[#10B981] rounded-full animate-ping"></span>
+                            ACTIVE MODEL: <span id="detail-model-ref" class="font-bold text-white">REF_SAMPLE</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h3 id="detail-title" class="text-3xl font-black text-slate-900 uppercase">Product Blueprint Name</h3>
+                        <p id="detail-desc" class="text-slate-600 text-sm leading-relaxed">Detailed technical description of our standard additive component.</p>
+                    </div>
+                </div>
+
+                <!-- Customizer Selection options -->
+                <div class="lg:col-span-6 bg-slate-50 border border-slate-200 p-8 space-y-8 shadow-sm">
+                    <div>
+                        <span class="text-xs text-[#10B981] font-mono tracking-[0.2em] uppercase font-bold">// SYSTEM CUSTOMIZER</span>
+                        <h4 class="text-lg font-black text-slate-900 uppercase">Tailor Production Variables</h4>
+                    </div>
+
+                    <!-- Material Compound selection -->
+                    <div class="space-y-3">
+                        <label class="block text-xs font-bold font-mono text-slate-500 uppercase tracking-widest"> Selective Polymer Colorway</label>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button onclick="updateDetailColor('Tactical Olive', '#10B981', this)" class="detail-color-btn border-2 border-[#10B981] bg-[#10B981]/10 text-slate-900 py-3 px-2 text-[10px] font-bold font-mono tracking-wider uppercase text-center transition-all">
+                                Tactical Olive
+                            </button>
+                            <button onclick="updateDetailColor('Stealth Black', '#334155', this)" class="detail-color-btn border border-slate-200 hover:border-[#10B981]/50 text-slate-400 py-3 px-2 text-[10px] font-bold font-mono tracking-wider uppercase text-center transition-all">
+                                Stealth Black
+                            </button>
+                            <button onclick="updateDetailColor('Angkor Red', '#EF4444', this)" class="detail-color-btn border border-slate-200 hover:border-[#10B981]/50 text-slate-400 py-3 px-2 text-[10px] font-bold font-mono tracking-wider uppercase text-center transition-all">
+                                Angkor Red
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Infill density / Mechanical toughness selection -->
+                    <div class="space-y-3">
+                        <label class="block text-xs font-bold font-mono text-slate-500 uppercase tracking-widest"> Infill Matrix Density Profile</label>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button onclick="updateDetailInfill('Eco (15%)', this)" class="detail-infill-btn border-2 border-[#10B981] bg-[#10B981]/10 text-slate-900 py-3 px-2 text-[10px] font-bold font-mono tracking-wider uppercase text-center transition-all">
+                                Eco (15%)
+                            </button>
+                            <button onclick="updateDetailInfill('Balanced (40%)', this)" class="detail-infill-btn border border-slate-200 hover:border-[#10B981]/50 text-slate-400 py-3 px-2 text-[10px] font-bold font-mono tracking-wider uppercase text-center transition-all">
+                                Balanced (40%)
+                            </button>
+                            <button onclick="updateDetailInfill('Solid (100%)', this)" class="detail-infill-btn border border-slate-200 hover:border-[#10B981]/50 text-slate-400 py-3 px-2 text-[10px] font-bold font-mono tracking-wider uppercase text-center transition-all">
+                                Solid (100%)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Cost / Checkout Summary Block -->
+                    <div class="pt-6 border-t border-slate-200 space-y-4">
+                        <div class="flex justify-between items-mono font-mono text-xs text-slate-600">
+                            <span>SELECTED COLOR:</span>
+                            <span id="detail-summary-color" class="font-bold text-slate-900">Tactical Olive</span>
+                        </div>
+                        <div class="flex justify-between items-mono font-mono text-xs text-slate-600">
+                            <span>INFILL DENSITY:</span>
+                            <span id="detail-summary-infill" class="font-bold text-slate-900">Eco (15%)</span>
+                        </div>
+                        <div class="flex justify-between items-end pt-4">
+                            <span class="text-xs text-slate-500 uppercase font-mono font-bold">Allocated Price:</span>
+                            <span id="detail-summary-price" class="text-4xl font-black text-slate-950">$0.00 <span class="text-xs font-normal text-slate-400">USD</span></span>
+                        </div>
+                        <button onclick="triggerDetailPayment()" class="w-full bg-[#0F172A] hover:bg-[#10B981] text-white py-4 text-xs font-bold uppercase tracking-widest transition-all shadow-md">
+                            ORDER 
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- ================= MODAL: SECURE ESCROW TRANSACTION ================= -->
+    <div id="payment-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-[100] p-4">
+        <div class="bg-white border border-slate-200 max-w-md w-full p-6 shadow-2xl relative animate-in fade-in zoom-in duration-200">
+            <button onclick="closePaymentModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-950">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            
+            <div class="border-b border-slate-200 pb-4 mb-4">
+                <span class="text-xs font-bold text-[#10B981] uppercase font-mono tracking-widest block"> REGIONAL ESCROW UPLINK</span>
+                <h3 class="text-lg font-black text-slate-900 uppercase">Bakong Gateway Secure KHQR</h3>
+            </div>
+
+            <p class="text-xs text-slate-600 mb-6 leading-relaxed font-sans">
+                Uplink established. Scan the secure KHQR coordinate vector mapping below to allocate Cambodia National Bank Bakong assets and settle the active polymer contract.
+            </p>
+
+            <!-- Vector Simulated KHQR Generator -->
+            <div class="flex flex-col items-center justify-center p-6 bg-slate-50 border border-slate-200 mb-6 relative">
+                <!-- Outer borders to mimic standard KHQR guidelines -->
+                <div class="absolute inset-2 border-2 border-red-500/20 pointer-events-none"></div>
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 bg-red-600 text-white text-[8px] font-mono px-3 py-0.5 tracking-wider font-extrabold uppercase rounded-sm z-10">
+                    KHQR PROTOCOL
+                </div>
+                
+                <!-- Mock QR Code Core Graphic -->
+                <div class="w-40 h-40 bg-white p-2 border border-slate-300 flex flex-col justify-between items-center relative shadow-sm">
+                    <!-- Tech aesthetic corners -->
+                    <div class="absolute top-1 left-1 w-8 h-8 border-t-4 border-l-4 border-slate-950"></div>
+                    <div class="absolute top-1 right-1 w-8 h-8 border-t-4 border-r-4 border-slate-950"></div>
+                    <div class="absolute bottom-1 left-1 w-8 h-8 border-b-4 border-l-4 border-slate-950"></div>
+                    <div class="absolute bottom-1 right-1 w-8 h-8 border-b-4 border-r-4 border-slate-950"></div>
+                    
+                    <!-- Center National Logo Representation -->
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white border border-slate-200 p-1 rounded-sm z-20">
+                        <i data-lucide="shield-check" class="w-6 h-6 text-red-600"></i>
+                    </div>
+
+                    <!-- Inner pixel matrix SVGs representing binary keys -->
+                    <svg class="w-full h-full text-slate-900" viewBox="0 0 100 100" fill="currentColor">
+                        <!-- Top left module finder -->
+                        <rect x="8" y="8" width="24" height="24" />
+                        <rect x="14" y="14" width="12" height="12" fill="white" />
+                        <rect x="17" y="17" width="6" height="6" />
+                        
+                        <!-- Top right module finder -->
+                        <rect x="68" y="8" width="24" height="24" />
+                        <rect x="74" y="14" width="12" height="12" fill="white" />
+                        <rect x="77" y="17" width="6" height="6" />
+
+                        <!-- Bottom left module finder -->
+                        <rect x="8" y="68" width="24" height="24" />
+                        <rect x="14" y="74" width="12" height="12" fill="white" />
+                        <rect x="17" y="77" width="6" height="6" />
+
+                        <!-- Random Mock Binary Scatter elements -->
+                        <rect x="40" y="12" width="6" height="6" />
+                        <rect x="52" y="18" width="12" height="6" />
+                        <rect x="46" y="28" width="6" height="12" />
+                        <rect x="12" y="44" width="12" height="6" />
+                        <rect x="28" y="40" width="6" height="6" />
+                        <rect x="38" y="48" width="18" height="6" />
+                        <rect x="56" y="40" width="6" height="18" />
+                        <rect x="80" y="44" width="12" height="12" />
+                        <rect x="44" y="68" width="6" height="18" />
+                        <rect x="56" y="74" width="12" height="6" />
+                        <rect x="76" y="74" width="6" height="12" />
+                        <rect x="84" y="68" width="8" height="6" />
+                    </svg>
+                </div>
+
+                <div class="mt-4 text-center">
+                    <span class="block text-xs font-mono text-slate-400">TRANSFER BALANCE:</span>
+                    <span id="payment-modal-amount" class="text-2xl font-black tracking-tight text-slate-900">$0.00 USD</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="closePaymentModal()" class="border border-slate-200 hover:bg-slate-50 text-slate-800 py-3 text-xs font-bold uppercase tracking-wider transition-all">
+                    Cancel Uplink
+                </button>
+                <button onclick="simulatePaymentApproval()" class="bg-[#10B981] hover:bg-[#059669] text-white py-3 text-xs font-bold uppercase tracking-wider transition-all shadow-md">
+                    Simulate Payment
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- [4] Clean Lockheed-Style Corporate Footer-->
+     
+    <footer class="bg-[#0F172A] text-slate-400 text-xs font-mono py-16 border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <div class="space-y-4">
+                <span class="text-[#10B981] text-lg font-black tracking-widest block"> RESPOOL</span>
+                <p class="text-slate-400 text-xs leading-relaxed">
+                    Decentralized polymer logistics utilizing additive operations to convert raw plastic waste vectors into mission-critical structural production materials.
+                </p>
+                <!--Repositioned Region indicator badge--> 
+                <div class="inline-flex items-center space-x-2 bg-slate-900 px-3 py-1.5 rounded-none border border-slate-800 mt-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse"></span>
+                    <span class="text-[9px] tracking-widest text-slate-300 font-bold font-mono uppercase">BASED IN CAMBODIA</span>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <span class="text-white text-xs font-bold uppercase tracking-widest block">USEFUL PROTOCOLS</span>
+                <ul class="space-y-2 text-slate-400 text-xs">
+                    <li><button onclick="navigate('who-we-are')" class="hover:text-white transition-colors text-left">Who We Are</button></li>
+                    <li><button onclick="navigate('what-we-do')" class="hover:text-white transition-colors text-left">What We Do</button></li>
+                    <li><button onclick="navigate('prod-filament')" class="hover:text-white transition-colors text-left">Material Safety Sheets</button></li>
+                </ul>
+            </div>
+
+            <div class="space-y-4">
+                <span class="text-white text-xs font-bold uppercase tracking-widest block">HEADQUARTERS</span>
+                <p class="text-slate-400 text-xs leading-relaxed">
+                    Kingdom of Cambodia Operational Hubs.<br>
+                    Autonomous manufacturing nodes.
+                </p>
+                <span class="block text-[10px] text-slate-500 mt-4">© 2026 RESPOOL CORPORATION. ALL STRATEGIC OPERATIONS SECURED.</span>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- Interactive JS Processing Script -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Mobile Menu Drawer Handler
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('menu-icon');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                icon.setAttribute('data-lucide', 'x');
+            } else {
+                menu.classList.add('hidden');
+                icon.setAttribute('data-lucide', 'menu');
+            }
+            lucide.createIcons();
+        }
+
+        // Global Custom Notification System replacing system alert()
+        function showNotification(title, message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            
+            // Build toast DOM element structure
+            const toast = document.createElement('div');
+            toast.className = `flex gap-3 bg-white border border-slate-200 p-4 shadow-xl transition-all duration-300 transform translate-x-12 opacity-0 pointer-events-auto`;
+            
+            let iconClass = 'text-[#10B981]';
+            let iconName = 'check-circle2';
+            if (type === 'error') {
+                iconClass = 'text-red-500';
+                iconName = 'alert-triangle';
+            } else if (type === 'info') {
+                iconClass = 'text-blue-500';
+                iconName = 'info';
+            }
+
+            toast.innerHTML = `
+                <div class="${iconClass} shrink-0 mt-0.5">
+                    <i data-lucide="${iconName}" class="w-5 h-5"></i>
+                </div>
+                <div class="flex-grow space-y-1">
+                    <h4 class="text-xs font-extrabold uppercase tracking-widest text-slate-950 font-mono">${title}</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed">${message}</p>
+                </div>
+                <button class="text-slate-400 hover:text-slate-950 self-start" onclick="this.parentElement.remove()">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            `;
+
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            // Trigger entry transition layout rendering
+            setTimeout(() => {
+                toast.classList.remove('translate-x-12', 'opacity-0');
+            }, 50);
+
+            // Automatic removal timing
+            setTimeout(() => {
+                toast.classList.add('translate-x-12', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 6000);
+        }
+
+        // --- SINGLE PAGE APPLICATION NAVIGATOR ---
+        const VIEWS = ['home', 'who-we-are', 'leadership', 'what-we-do', 'prod-filament', 'prod-custom-print', 'prod-premade', 'prod-premade-detail'];
+
+        function navigate(viewId) {
+            VIEWS.forEach(view => {
+                const element = document.getElementById(`view-${view}`);
+                if (view === viewId) {
+                    element.classList.remove('hidden');
+                } else {
+                    element.classList.add('hidden');
+                }
+            });
+
+            // Update Active Navigation Item Color Indicators
+            const NAV_ITEMS = ['home', 'who-we-are', 'leadership', 'what-we-do'];
+            NAV_ITEMS.forEach(nav => {
+                const btn = document.getElementById(`nav-${nav}`);
+                if (btn) {
+                    if (nav === viewId) {
+                        btn.classList.add('active-nav-indicator');
+                    } else {
+                        btn.classList.remove('active-nav-indicator');
+                    }
+                }
+            });
+
+            // Handle special execution conditions (like starting custom renderer)
+            if (viewId === 'prod-custom-print') {
+                setTimeout(() => {
+                    initInteractive3DEngine();
+                }, 100);
+            }
+
+            // Scroll to top smoothly
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- PRODUCT PAGE CONTROLLER (FILAMENT procurement) ---
+        let selectedProductPrice = 18.50;
+        let selectedProductWeight = 1;
+        let selectedProductSize = '1.75mm';
+        let selectedColorName = 'Tactical Olive';
+
+        function selectSpoolSize(size, btnElement) {
+            selectedProductSize = size;
+            document.getElementById('summary-size').innerText = size;
+
+            // Handle active styling classes
+            document.querySelectorAll('.spool-btn').forEach(btn => {
+                btn.classList.remove('border-2', 'border-[#10B981]', 'bg-[#10B981]/10', 'text-slate-900');
+                btn.classList.add('border-slate-200', 'text-slate-400');
+            });
+            btnElement.classList.remove('border-slate-200', 'text-slate-400');
+            btnElement.classList.add('border-2', 'border-[#10B981]', 'bg-[#10B981]/10', 'text-slate-900');
+        }
+
+        function selectColor(colorName, price, btnElement) {
+            selectedProductPrice = price;
+            selectedColorName = colorName;
+            document.getElementById('summary-rate').innerText = `$${price.toFixed(2)} / kg`;
+
+            // Handle active styling classes
+            document.querySelectorAll('.color-btn').forEach(btn => {
+                btn.classList.remove('border-2', 'border-[#10B981]', 'bg-[#10B981]/10', 'text-slate-900');
+                btn.classList.add('border-slate-200', 'text-slate-400');
+            });
+            btnElement.classList.remove('border-slate-200', 'text-slate-400');
+            btnElement.classList.add('border-2', 'border-[#10B981]', 'bg-[#10B981]/10', 'text-slate-900');
+
+            calculateProductTotal();
+        }
+
+        function updateQuantityPage(val) {
+            selectedProductWeight = parseInt(val);
+            document.getElementById('qty-val-page').innerText = `${selectedProductWeight} kg`;
+            document.getElementById('summary-weight').innerText = `${selectedProductWeight.toFixed(2)} kg`;
+            calculateProductTotal();
+        }
+
+        function calculateProductTotal() {
+            const total = selectedProductPrice * selectedProductWeight;
+            document.getElementById('total-cost-page').innerHTML = `$${total.toFixed(2)} <span class="text-sm font-normal text-slate-400">USD</span>`;
+        }
+
+        // --- PRE-MADE BLUEPRINT MODELS COLLECTION DATA ---
+        const CATALOG_BLUEPRINTS = {
+            1: {
+                title: "Tactical Armor Phone Case",
+                ref: "CASE_V2.STL",
+                price: 12.00,
+                desc: "Ultra-rugged protective phone case optimized with carbon-infused hexagonal structures. Excellent shock dissipation, built with impact-resistant cPET polymers.",
+                svg: `<svg class="w-40 h-40 text-current transition-all" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="30" y="15" width="40" height="70" rx="6" stroke="currentColor" stroke-width="2" />
+                    <rect x="34" y="19" width="32" height="62" rx="3" stroke="currentColor" stroke-width="1" stroke-dasharray="2 1" />
+                    <rect x="42" y="25" width="16" height="10" rx="1" stroke="currentColor" stroke-width="1.5" />
+                    <line x1="38" y1="45" x2="62" y2="45" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3"/>
+                </svg>`
+            },
+            2: {
+                title: "Heavy Duty Locking Keychain",
+                ref: "CLIP_M3.STL",
+                price: 6.50,
+                desc: "High-density modular locking mechanism optimized for tension-bearing utility applications. Designed with specialized pivot support structures.",
+                svg: `<svg class="w-40 h-40 text-current transition-all" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M 35 25 C 50 15, 65 15, 70 30 C 73 40, 70 60, 65 75 C 55 85, 40 85, 35 75 C 30 65, 30 35, 35 25 Z" stroke="currentColor" stroke-width="2.5" />
+                    <line x1="33" y1="35" x2="33" y2="65" stroke="currentColor" stroke-width="4" stroke-dasharray="4 2" />
+                    <circle cx="33" cy="35" r="4.5" fill="currentColor" />
+                    <circle cx="33" cy="65" r="4.5" fill="currentColor" />
+                </svg>`
+            },
+            3: {
+                title: "Modular Grid Divider System",
+                ref: "GRID_DIV.STL",
+                price: 18.00,
+                desc: "Flexible, interlocking modular divider frames. Perfect for structural layouts, laboratory organizing bins, and components matrix sorting.",
+                svg: `<svg class="w-40 h-40 text-current transition-all" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="20" y="20" width="60" height="60" rx="3" stroke="currentColor" stroke-width="2" />
+                    <line x1="40" y1="20" x2="40" y2="80" stroke="currentColor" stroke-width="1.5" />
+                    <line x1="60" y1="20" x2="60" y2="80" stroke="currentColor" stroke-width="1.5" />
+                    <line x1="20" y1="40" x2="80" y2="40" stroke="currentColor" stroke-width="1.5" />
+                    <line x1="20" y1="60" x2="80" y2="60" stroke="currentColor" stroke-width="1.5" />
+                </svg>`
+            },
+            4: {
+                title: "Desk Cable Manager",
+                ref: "CABLE_MGMT.STL",
+                price: 5.00,
+                desc: "Sleek flexible management track designed with three specific pass-through conduits to secure and organize heavy accessory lines along work desks.",
+                svg: `<svg class="w-40 h-40 text-current transition-all" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="15" y="40" width="70" height="20" rx="4" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="30" cy="50" r="5" fill="currentColor"/>
+                    <circle cx="50" cy="50" r="5" fill="currentColor"/>
+                    <circle cx="70" cy="50" r="5" fill="currentColor"/>
+                </svg>`
+            },
+            5: {
+                title: "Industrial Corner Bracket",
+                ref: "ANGLE_BRK.STL",
+                price: 9.50,
+                desc: "Heavy duty right angle structural element reinforced with thick rib webbing. Optimized to lock and stabilize dynamic framing systems.",
+                svg: `<svg class="w-40 h-40 text-current transition-all" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 20 H80 V40 H40 V80 H20 Z" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="30" cy="30" r="4.5" fill="currentColor"/>
+                    <circle cx="70" cy="30" r="4.5" fill="currentColor"/>
+                </svg>`
+            },
+            6: {
+                title: "Precision Transmission Gear",
+                ref: "MECH_GEAR.STL",
+                price: 14.25,
+                desc: "Accurately modeled drive cog tailored for clean rotation. Built for high dimensional accuracy, minimizing surface resistance friction.",
+                svg: `<svg class="w-40 h-40 text-current transition-all" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="25" stroke="currentColor" stroke-width="2.5" />
+                    <circle cx="50" cy="50" r="10" stroke="currentColor" stroke-width="2" />
+                    <rect x="47" y="18" width="6" height="10" fill="currentColor" />
+                    <rect x="47" y="72" width="6" height="10" fill="currentColor" />
+                    <rect x="18" y="47" width="10" height="6" fill="currentColor" />
+                    <rect x="72" y="47" width="10" height="6" fill="currentColor" />
+                </svg>`
+            }
+        };
+
+        let currentDetailId = null;
+        let currentDetailColorVal = '#10B981';
+        let currentDetailColorName = 'Tactical Olive';
+        let currentDetailInfill = 'Eco (15%)';
+
+        // Navigate to dynamic detailed layout page
+        function openCatalogDetail(id) {
+            const bp = CATALOG_BLUEPRINTS[id];
+            if (!bp) return;
+
+            currentDetailId = id;
+            document.getElementById('detail-title').innerText = bp.title;
+            document.getElementById('detail-model-ref').innerText = bp.ref;
+            document.getElementById('detail-desc').innerText = bp.desc;
+            
+            // Set SVG viewport preview
+            const vp = document.getElementById('detail-svg-viewport');
+            vp.innerHTML = bp.svg;
+            
+            // Set initial dynamic colorway
+            updateDetailColor('Tactical Olive', '#10B981', document.querySelector('.detail-color-btn'));
+            updateDetailInfill('Eco (15%)', document.querySelector('.detail-infill-btn'));
+
+            navigate('prod-premade-detail');
+        }
+
+        // Live visual and technical property adjustments
+        function updateDetailColor(colorName, colorHex, btnElement) {
+            currentDetailColorVal = colorHex;
+            currentDetailColorName = colorName;
+            document.getElementById('detail-summary-color').innerText = colorName;
+
+            // Handle active classes
+            document.querySelectorAll('.detail-color-btn').forEach(btn => {
+                btn.classList.remove('border-2', 'border-[#10B981]', 'bg-[#10B981]/10', 'text-slate-900');
+                btn.classList.add('border-slate-200', 'text-slate-400');
+            });
+            btnElement.classList.remove('border-slate-200', 'text-slate-400');
+            btnElement.classList.add('border-2', 'border-[#10B981]', 'bg-[#10B981]/10', 'text-slate-900');
+
+            // Apply color way to SVG element
+            const svgEl = document.querySelector('#detail-svg-viewport svg');
+            if (svgEl) {
+                svgEl.style.color = colorHex;
+            }
+
+            calculateDetailPrice();
+        }
+
+        function updateDetailInfill(infillValue, btnElement) {
+            currentDetailInfill = infillValue;
+            document.getElementById('detail-summary-infill').innerText = infillValue;
+
+            // Handle active classes
+            document.querySelectorAll('.detail-infill-btn').forEach(btn => {
+                btn.classList.remove('border-2', 'border-[#10B981]', 'bg-[#10B981]/10', 'text-slate-900');
+                btn.classList.add('border-slate-200', 'text-slate-400');
+            });
+            btnElement.classList.remove('border-slate-200', 'text-slate-400');
+            btnElement.classList.add('border-2', 'border-[#10B981]', 'bg-[#10B981]/10', 'text-slate-900');
+
+            calculateDetailPrice();
+        }
+
+        function calculateDetailPrice() {
+            if (!currentDetailId) return;
+            const basePrice = CATALOG_BLUEPRINTS[currentDetailId].price;
+            let multiplier = 1.0;
+
+            // Premium colors add to material rate slightly
+            if (currentDetailColorName === 'Angkor Red') multiplier += 0.15;
+            
+            // Solid infill density consumes more polymer feedstocks
+            if (currentDetailInfill.includes('40%')) multiplier += 0.3;
+            if (currentDetailInfill.includes('100%')) multiplier += 0.8;
+
+            const finalPrice = basePrice * multiplier;
+            document.getElementById('detail-summary-price').innerHTML = `$${finalPrice.toFixed(2)} <span class="text-xs font-normal text-slate-400">USD</span>`;
+        }
+
+        function triggerDetailPayment() {
+            if (!currentDetailId) return;
+            const priceText = document.getElementById('detail-summary-price').innerText.split(' ')[0];
+            const finalPrice = parseFloat(priceText.replace('$', ''));
+            openPaymentModal(finalPrice);
+        }
+
+
+        // --- PAYMENT MODAL PROTOCOLS ---
+        let currentModalAmount = 0;
+
+        function triggerPayment() {
+            const total = selectedProductPrice * selectedProductWeight;
+            openPaymentModal(total);
+        }
+
+        function openPaymentModal(amount) {
+            currentModalAmount = amount;
+            document.getElementById('payment-modal-amount').innerText = `$${amount.toFixed(2)} USD`;
+            document.getElementById('payment-modal').classList.remove('hidden');
+            document.getElementById('payment-modal').classList.add('flex');
+        }
+
+        // Close the payment processing dialog cleanly
+        function closePaymentModal() {
+            document.getElementById('payment-modal').classList.remove('flex');
+            document.getElementById('payment-modal').classList.add('hidden');
+        }
+
+        function simulatePaymentApproval() {
+            closePaymentModal();
+            showNotification(
+                'CONTRACT SECURED', 
+                `Successfully cleared raw polymer allocation escrow of $${currentModalAmount.toFixed(2)} USD via Cambodian National Bank Bakong routing nodes.`,
+                'success'
+            );
+        }
+
+        function orderPremade(itemName, price) {
+            openPaymentModal(price);
+        }
+
+        // --- CUSTOM PRINT UPLINK PAGE LOGIC ---
+        function simulateFileUpload() {
+            document.getElementById('model-file-input-page').click();
+        }
+
+        function handleFileSelectedPage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const statusLabel = document.getElementById('file-status-page');
+                const parsingContainer = document.getElementById('parsing-container');
+                const parsingBar = document.getElementById('parsing-bar');
+                const parsingPercentage = document.getElementById('parsing-percentage');
+
+                statusLabel.innerText = "Transmitting...";
+                statusLabel.className = "text-yellow-500 font-mono font-bold animate-pulse";
+                
+                // Show telemetry parser bar simulation
+                parsingContainer.classList.remove('hidden');
+                parsingBar.style.width = '0%';
+                parsingPercentage.innerText = '0%';
+
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 10;
+                    parsingBar.style.width = `${progress}%`;
+                    parsingPercentage.innerText = `${progress}%`;
+
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        
+                        // Parse successfully complete
+                        statusLabel.innerText = `${file.name.toUpperCase()} (ONLINE_CAD)`;
+                        statusLabel.className = "text-[#10B981] font-mono font-bold";
+                        parsingContainer.classList.add('hidden');
+
+                        showNotification(
+                            'TELEMETRY VERIFIED', 
+                            `Successfully parsed mesh configurations for blueprint: "${file.name}". 3D Engine online.`,
+                            'info'
+                        );
+
+                        // Swap active 3D wireframe type dynamically
+                        setViewportModelShape('gear');
+                    }
+                }, 150);
+            }
+        }
+
+        function selectPrintColor(colorName, btnElement) {
+            document.querySelectorAll('.print-col-btn').forEach(btn => {
+                btn.classList.remove('border-2', 'border-[#10B981]', 'bg-[#10B981]/10', 'text-slate-900');
+                btn.classList.add('border-slate-200', 'text-slate-400');
+            });
+            btnElement.classList.remove('border-slate-200', 'text-slate-400');
+            btnElement.classList.add('border-2', 'border-[#10B981]', 'bg-[#10B981]/10', 'text-slate-900');
+            
+            // Re-color 3D viewport canvas wireframe colors live!
+            if (colorName.includes('Red')) {
+                setViewportModelColor('#EF4444');
+            } else if (colorName.includes('Olive')) {
+                setViewportModelColor('#10B981');
+            } else {
+                setViewportModelColor('#334155');
+            }
+        }
+
+        function triggerPrintSubmit() {
+            const statusLabel = document.getElementById('file-status-page').innerText;
+            if (statusLabel.includes('Awaiting')) {
+                showNotification(
+                    'TRANSMISSION FAILED', 
+                    'Please transmit a valid CAD Blueprint Vector file (.STL, .STEP, or .3MF) before building.',
+                    'error'
+                );
+                return;
+            }
+            showNotification(
+                'BUILD ORDER TRANSMITTED', 
+                'Vector matrix data compiled successfully. Localized SEZ additive node assigned to task. Build phase active.',
+                'success'
+            );
+        }
+
+        // --- 3D INTERACTIVE VIEWPORT RENDERING SYSTEM ---
+        let canvas, ctx;
+        let angleX = 0.5, angleY = 0.5;
+        let isDragging = false;
+        let previousMousePosition = { x: 0, y: 0 };
+        let modelColor = '#10B981';
+        let currentShape = 'cube'; // 'cube' or 'gear'
+
+        function setViewportModelColor(hex) {
+            modelColor = hex;
+        }
+
+        function setViewportModelShape(shape) {
+            currentShape = shape;
+        }
+
+        function initInteractive3DEngine() {
+            canvas = document.getElementById('viewport-canvas-page');
+            if (!canvas) return;
+            ctx = canvas.getContext('2d');
+
+            // Attach interactive mouse/touch event listeners
+            canvas.addEventListener('mousedown', startDrag);
+            canvas.addEventListener('mousemove', drag);
+            window.addEventListener('mouseup', endDrag);
+
+            canvas.addEventListener('touchstart', startTouchDrag, { passive: false });
+            canvas.addEventListener('touchmove', touchDrag, { passive: false });
+            window.addEventListener('touchend', endDrag);
+
+            // Trigger Animation Render loop
+            requestAnimationFrame(renderLoop);
+        }
+
+        function startDrag(e) {
+            isDragging = true;
+            previousMousePosition = { x: e.clientX, y: e.clientY };
+        }
+
+        function drag(e) {
+            if (!isDragging) return;
+            const deltaX = e.clientX - previousMousePosition.x;
+            const deltaY = e.clientY - previousMousePosition.y;
+
+            angleY += deltaX * 0.01;
+            angleX += deltaY * 0.01;
+
+            previousMousePosition = { x: e.clientX, y: e.clientY };
+        }
+
+        function startTouchDrag(e) {
+            if (e.touches.length === 1) {
+                isDragging = true;
+                previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                e.preventDefault();
+            }
+        }
+
+        function touchDrag(e) {
+            if (!isDragging || e.touches.length !== 1) return;
+            const deltaX = e.touches[0].clientX - previousMousePosition.x;
+            const deltaY = e.touches[0].clientY - previousMousePosition.y;
+
+            angleY += deltaX * 0.01;
+            angleX += deltaY * 0.01;
+
+            previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            e.preventDefault();
+        }
+
+        function endDrag() {
+            isDragging = false;
+        }
+
+        // Projection calculation helper for 3D rendering
+        function project3D(x, y, z) {
+            let cosX = Math.cos(angleX);
+            let sinX = Math.sin(angleX);
+            let y1 = y * cosX - z * sinX;
+            let z1 = y * sinX + z * cosX;
+
+            let cosY = Math.cos(angleY);
+            let sinY = Math.sin(angleY);
+            let x2 = x * cosY - z1 * sinY;
+            let z2 = x * sinY + z1 * cosY;
+
+            const zoom = 200;
+            const scale = zoom / (zoom + z2);
+            return {
+                x: (canvas.width / 2) + x2 * scale * 45,
+                y: (canvas.height / 2) + y1 * scale * 45
+            };
+        }
+
+        function renderLoop() {
+            if (!canvas || !ctx) return;
+
+            // Clear Viewport background
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw technical grid lines
+            ctx.strokeStyle = 'rgba(16, 185, 129, 0.04)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < canvas.width; i += 20) {
+                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
+            }
+            for (let j = 0; j < canvas.height; j += 20) {
+                ctx.beginPath(); ctx.moveTo(0, j); ctx.lineTo(canvas.width, j); ctx.stroke();
+            }
+
+            ctx.strokeStyle = modelColor;
+            ctx.lineWidth = 1.5;
+
+            if (currentShape === 'cube') {
+                const vertices = [
+                    {x: -1, y: -1, z: -1}, {x: 1, y: -1, z: -1}, {x: 1, y: 1, z: -1}, {x: -1, y: 1, z: -1},
+                    {x: -1, y: -1, z: 1},  {x: 1, y: -1, z: 1},  {x: 1, y: 1, z: 1},  {x: -1, y: 1, z: 1}
+                ];
+
+                const projected = vertices.map(v => project3D(v.x, v.y, v.z));
+
+                const drawLine = (i, j) => {
+                    ctx.beginPath();
+                    ctx.moveTo(projected[i].x, projected[i].y);
+                    ctx.lineTo(projected[j].x, projected[j].y);
+                    ctx.stroke();
+                };
+
+                drawLine(0, 1); drawLine(1, 2); drawLine(2, 3); drawLine(3, 0);
+                drawLine(4, 5); drawLine(5, 6); drawLine(6, 7); drawLine(7, 4);
+                drawLine(0, 4); drawLine(1, 5); drawLine(2, 6); drawLine(3, 7);
+            } 
+            else if (currentShape === 'gear') {
+                const points = [];
+                const steps = 12;
+                const radius = 0.9;
+                
+                for (let i = 0; i < steps; i++) {
+                    const r = (i % 2 === 0) ? radius : radius * 0.7; // Jagged cog shape
+                    const rad = (i / steps) * Math.PI * 2;
+                    const x = Math.cos(rad) * r;
+                    const y = Math.sin(rad) * r;
+                    points.push({ x, y, z: -0.4 });
+                    points.push({ x, y, z: 0.4 });
+                }
+
+                const projected = points.map(p => project3D(p.x, p.y, p.z));
+
+                const drawLine = (i, j) => {
+                    ctx.beginPath();
+                    ctx.moveTo(projected[i].x, projected[i].y);
+                    ctx.lineTo(projected[j].x, projected[j].y);
+                    ctx.stroke();
+                };
+
+                for (let i = 0; i < projected.length; i += 2) {
+                    const next = (i + 2) % projected.length;
+                    drawLine(i, next);
+                    drawLine(i + 1, next + 1);
+                    drawLine(i, i + 1);
+                }
+            }
+
+            // Slowly orbit model automatically if not dragging
+            if (!isDragging) {
+                angleY += 0.005;
+            }
+
+            requestAnimationFrame(renderLoop);
+        }
+
+        // Initialize grid render context placeholder instantly
+        const initialCanvas = document.getElementById('viewport-canvas-page');
+        if (initialCanvas) {
+            const initialCtx = initialCanvas.getContext('2d');
+            initialCtx.fillStyle = '#0F172A';
+            initialCtx.fillRect(0, 0, initialCanvas.width, initialCanvas.height);
+        }
+
+    </script>
+</body>
+</html>
